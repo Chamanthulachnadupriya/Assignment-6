@@ -1,0 +1,88 @@
+const products = [
+    { id: 1, name: 'Product 1', category: 'Category 1' },
+    { id: 2, name: 'Product 2', category: 'Category 2' },
+    { id: 3, name: 'Product 3', category: 'Category 1' },
+    { id: 4, name: 'Product 4', category: 'Category 2' },
+    { id: 5, name: 'Product 5', category: 'Category 3' },
+];
+
+export default products;
+import React, { useState } from 'react';
+import ProductList from './ProductList';
+import CategoryMenu from './CategoryMenu';
+
+import products from './Product';
+
+function App() {
+  const [category, setCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleCategorySelect = (selectedCategory) => {
+    setCategory(selectedCategory);
+  };
+
+  const handleSearchInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filterProducts = () => {
+    return products.filter(product => {
+      return (
+        (!category || product.category === category) &&
+        (!searchTerm || product.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    });
+  };
+
+  return (
+    <div>
+      <h1>Product Filter App</h1>
+      <CategoryMenu onSelectCategory={handleCategorySelect} />
+      <input
+        type="text"
+        placeholder="Search Products..."
+        value={searchTerm}
+        onChange={handleSearchInputChange}
+      />
+      <ProductList products={filterProducts()} />
+    </div>
+  );
+}
+
+export default App;
+import React from 'react';
+
+function CategoryMenu({ onSelectCategory }) {
+  const categories = ['Category 1', 'Category 2', 'Category 3'];
+
+  return (
+    <div>
+      <h2>Categories</h2>
+      <ul>
+        {categories.map(category => (
+          <li key={category}>
+            <button onClick={() => onSelectCategory(category)}>{category}</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default CategoryMenu;
+import React from 'react';
+
+function ProductList({ products }) {
+  return (
+    <div>
+      <h2>Products</h2>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>{product.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default ProductList;
